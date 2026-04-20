@@ -726,6 +726,35 @@ body { background: white; }
 <script>
   document.getElementById('today').textContent = new Date().toLocaleDateString('hu-HU');
 
+  function saveState() {
+    const selects = document.querySelectorAll('.status-select');
+    const state = {};
+    selects.forEach(s => {
+      const id = s.closest('tr').querySelector('.test-id').textContent.trim();
+      state[id] = s.value;
+    });
+    const notes = document.querySelector('.notes-area textarea').value;
+    localStorage.setItem('erp_smoke_state', JSON.stringify(state));
+    localStorage.setItem('erp_smoke_notes', notes);
+  }
+
+  function loadState() {
+    const saved = localStorage.getItem('erp_smoke_state');
+    const notes = localStorage.getItem('erp_smoke_notes');
+    if (saved) {
+      const state = JSON.parse(saved);
+      const selects = document.querySelectorAll('.status-select');
+      selects.forEach(s => {
+        const id = s.closest('tr').querySelector('.test-id').textContent.trim();
+        if (state[id]) s.value = state[id];
+      });
+    }
+    if (notes) {
+      document.querySelector('.notes-area textarea').value = notes;
+    }
+    updateStats();
+  }
+
   function updateStats() {
     const selects = document.querySelectorAll('.status-select');
     let pass = 0, fail = 0, skip = 0, open = 0;
@@ -745,12 +774,18 @@ body { background: white; }
     document.getElementById('progress-bar').style.width = pct + '%';
     document.getElementById('pct-label').textContent = pct + '%';
 
-    // color progress bar
     const bar = document.getElementById('progress-bar');
     if (fail > 0) bar.style.background = '#c84b2f';
     else if (pct === 100) bar.style.background = '#2a6b4a';
     else bar.style.background = '#2553a0';
+
+    saveState();
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.notes-area textarea').addEventListener('input', saveState);
+    loadState();
+  });
 </script>
 
 </body>
