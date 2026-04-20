@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERP Smoke Teszt Terv</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #fffdf7;
+    --ink: #1a1612;
+    --ink2: #4a4035;
+    --accent: #c84b2f;
+    --accent2: #2a6b4a;
+    --accent3: #2553a0;
+    --gold: #b8860b;
+    --rule: #d6cfc0;
+    --pass: #2a6b4a;
+    --fail: #c84b2f;
+    --skip: #7a6a50;
+  }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(--bg);
+color: var(--ink);
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 300;
+line-height: 1.6;
+min-height: 100vh;
+}
+
+.page {
+max-width: 960px;
+margin: 0 auto;
+padding: 48px 32px 80px;
+}
+
+/* HEADER */
+.header {
+border-top: 4px solid var(--ink);
+border-bottom: 1px solid var(--rule);
+padding: 32px 0 24px;
+margin-bottom: 48px;
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 24px;
+align-items: end;
+}
+
+.header-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(--accent);
+margin-bottom: 8px;
+}
+
+.header h1 {
+font-family: ‘DM Serif Display’, serif;
+font-size: clamp(28px, 5vw, 46px);
+line-height: 1.1;
+font-weight: 400;
+}
+
+.header-meta {
+text-align: right;
+font-family: ‘DM Mono’, monospace;
+font-size: 12px;
+color: var(--ink2);
+line-height: 1.8;
+}
+
+/* SUMMARY BAR */
+.summary-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 16px;
+margin-bottom: 48px;
+}
+
+.summary-card {
+background: var(--surface);
+border: 1px solid var(--rule);
+padding: 20px;
+text-align: center;
+}
+
+.summary-card .num {
+font-family: ‘DM Serif Display’, serif;
+font-size: 36px;
+line-height: 1;
+margin-bottom: 4px;
+}
+
+.summary-card .lbl {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(--ink2);
+}
+
+.num-total { color: var(--accent3); }
+.num-webshop { color: var(--accent); }
+.num-offline { color: var(--accent2); }
+.num-shared { color: var(--gold); }
+
+/* SECTION */
+.section {
+margin-bottom: 48px;
+}
+
+.section-header {
+display: flex;
+align-items: center;
+gap: 16px;
+margin-bottom: 24px;
+padding-bottom: 12px;
+border-bottom: 2px solid var(--ink);
+}
+
+.section-badge {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+background: var(--ink);
+color: var(--bg);
+padding: 4px 10px;
+white-space: nowrap;
+}
+
+.section-badge.web { background: var(--accent); }
+.section-badge.store { background: var(--accent2); }
+.section-badge.shared { background: var(--accent3); }
+.section-badge.integration { background: var(--gold); color: var(--ink); }
+
+.section-title {
+font-family: ‘DM Serif Display’, serif;
+font-size: 22px;
+font-weight: 400;
+}
+
+.section-count {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+color: var(--ink2);
+margin-left: auto;
+}
+
+/* TEST TABLE */
+.test-table {
+width: 100%;
+border-collapse: collapse;
+background: var(--surface);
+font-size: 14px;
+}
+
+.test-table thead th {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--ink2);
+padding: 10px 14px;
+text-align: left;
+border-bottom: 2px solid var(--rule);
+background: var(--bg);
+}
+
+.test-table tbody tr {
+border-bottom: 1px solid var(--rule);
+cursor: pointer;
+transition: background 0.15s;
+}
+
+.test-table tbody tr:hover { background: #f0ead8; }
+
+.test-table td {
+padding: 12px 14px;
+vertical-align: top;
+}
+
+.test-id {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+color: var(--ink2);
+white-space: nowrap;
+}
+
+.test-name {
+font-weight: 500;
+margin-bottom: 2px;
+}
+
+.test-desc {
+font-size: 12px;
+color: var(--ink2);
+line-height: 1.4;
+}
+
+.prio {
+display: inline-block;
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+padding: 2px 8px;
+letter-spacing: 0.05em;
+}
+
+.prio-P1 { background: #fde8e4; color: var(--fail); border: 1px solid #f5c6bc; }
+.prio-P2 { background: #fdf4e4; color: var(--gold); border: 1px solid #f0dfa0; }
+.prio-P3 { background: #e4f0ea; color: var(--pass); border: 1px solid #b8d8c4; }
+
+/* STATUS SELECT */
+.status-select {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+padding: 4px 8px;
+border: 1px solid var(--rule);
+background: var(--bg);
+color: var(--ink);
+cursor: pointer;
+outline: none;
+width: 90px;
+}
+
+.status-select option { background: var(--surface); }
+
+/* NOTES AREA */
+.notes-area {
+background: var(--surface);
+border: 1px solid var(--rule);
+padding: 24px;
+margin-bottom: 48px;
+}
+
+.notes-area h3 {
+font-family: ‘DM Serif Display’, serif;
+font-size: 18px;
+margin-bottom: 16px;
+font-weight: 400;
+}
+
+.notes-area textarea {
+width: 100%;
+min-height: 80px;
+background: var(--bg);
+border: 1px solid var(--rule);
+padding: 10px 14px;
+font-family: ‘DM Mono’, monospace;
+font-size: 12px;
+color: var(--ink);
+resize: vertical;
+outline: none;
+}
+
+.notes-area textarea:focus { border-color: var(--ink); }
+
+/* LEGEND */
+.legend {
+display: flex;
+gap: 20px;
+flex-wrap: wrap;
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+margin-bottom: 24px;
+color: var(--ink2);
+}
+
+.legend span { display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-pass { background: var(--pass); }
+.dot-fail { background: var(--fail); }
+.dot-skip { background: var(--skip); }
+.dot-open { border: 2px solid var(--rule); background: transparent; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+background: var(--rule);
+height: 6px;
+margin-bottom: 40px;
+position: relative;
+}
+
+.progress-bar {
+height: 100%;
+background: var(--accent2);
+width: 0%;
+transition: width 0.4s ease;
+}
+
+.progress-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+color: var(--ink2);
+margin-bottom: 6px;
+display: flex;
+justify-content: space-between;
+}
+
+/* PRINT */
+.print-btn {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+background: var(--ink);
+color: var(--bg);
+border: none;
+padding: 10px 20px;
+cursor: pointer;
+transition: background 0.2s;
+}
+
+.print-btn:hover { background: var(--accent); }
+
+.footer {
+border-top: 1px solid var(--rule);
+padding-top: 24px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: gap;
+}
+
+.footer-note {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+color: var(--ink2);
+}
+
+@media print {
+body { background: white; }
+.print-btn { display: none; }
+}
+
+@media (max-width: 600px) {
+.summary-grid { grid-template-columns: repeat(2,1fr); }
+.header { grid-template-columns: 1fr; }
+.header-meta { text-align: left; }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-label">ERP Bevezetés · Smoke Teszt Terv</div>
+      <h1>Smoke Teszt<br>Dokumentum</h1>
+    </div>
+    <div class="header-meta">
+      Verzió: 1.0<br>
+      Típus: Smoke / Sanity<br>
+      Csatorna: Webshop + Offline<br>
+      Dátum: <span id="today"></span>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="num num-total" id="cnt-total">28</div>
+      <div class="lbl">Összes teszt</div>
+    </div>
+    <div class="summary-card">
+      <div class="num num-webshop" id="cnt-pass">0</div>
+      <div class="lbl">Átment (Pass)</div>
+    </div>
+    <div class="summary-card">
+      <div class="num num-offline" id="cnt-fail">0</div>
+      <div class="lbl">Sikertelen (Fail)</div>
+    </div>
+    <div class="summary-card">
+      <div class="num num-shared" id="cnt-open">28</div>
+      <div class="lbl">Nyitott</div>
+    </div>
+  </div>
+
+  <div class="progress-label">
+    <span>Teszt haladás</span>
+    <span id="pct-label">0%</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot dot-open"></span> Nyitott</span>
+    <span><span class="dot dot-pass"></span> Pass</span>
+    <span><span class="dot dot-fail"></span> Fail</span>
+    <span><span class="dot dot-skip"></span> Skip</span>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge shared">Közös alap</span>
+      <span class="section-title">Rendszer indítás & bejelentkezés</span>
+      <span class="section-count">5 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-001</td>
+          <td><div class="test-name">ERP rendszer elindítása</div><div class="test-desc">Az ERP alkalmazás sikeresen betölt, főképernyő megjelenik, nincs kritikus hiba.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-002</td>
+          <td><div class="test-name">Raktári felhasználó bejelentkezés</div><div class="test-desc">Sikeres bejelentkezés, megfelelő jogosultságok megjelennek.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-003</td>
+          <td><div class="test-name">Kasszás / bolti dolgozó bejelentkezés</div><div class="test-desc">Korlátozott jogkörű felhasználó bejelentkezik, csak az engedélyezett menük látszanak.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-004</td>
+          <td><div class="test-name">Kijelentkezés</div><div class="test-desc">Kijelentkezés után a munkamenet megszűnik, újra kér belépési adatokat.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-005</td>
+          <td><div class="test-name">Alap navigáció</div><div class="test-desc">Minden főmenüpont kattintható, az oldalak betöltődnek hiba nélkül.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge shared">Közös alap</span>
+      <span class="section-title">Termék & készletkezelés</span>
+      <span class="section-count">6 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr><th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-006</td>
+          <td><div class="test-name">Terméklista megjelenítése</div><div class="test-desc">A termékkatalógus betölt, cikkek neve, SKU-ja és ára látható.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-007</td>
+          <td><div class="test-name">Készletszint lekérdezés</div><div class="test-desc">Egy teszt termék valós idejű raktárkészlete lekérdezhető raktáranként (bolt / webshop).</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-008</td>
+          <td><div class="test-name">Új termék felvitele</div><div class="test-desc">Új cikk létrehozható névvel, árral, SKU-val és legalább egy vonalkóddal.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-009</td>
+          <td><div class="test-name">Termékkép & adatlap szinkron webshopba</div><div class="test-desc">Az ERP-ben módosított ár vagy leírás perceken belül megjelenik a webshop felületén.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-010</td>
+          <td><div class="test-name">Vonalkód olvasás offline pénztárnál</div><div class="test-desc">Szkennelt vonalkód alapján a termék azonosítható és az aktuális ár megjelenik a POS-ban.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-011</td>
+          <td><div class="test-name">Alacsony készlet riasztás</div><div class="test-desc">Ha egy termék a beállított minimum alá esik, a rendszer figyelmeztető jelzést küld.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge web">Webshop</span>
+      <span class="section-title">Online rendelés folyamat</span>
+      <span class="section-count">6 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr><th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-012</td>
+          <td><div class="test-name">Webshop rendelés fogadása ERP-ben</div><div class="test-desc">Webshopban leadott teszt rendelés megjelenik az ERP rendeléslista moduljában.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-013</td>
+          <td><div class="test-name">Rendelés státuszváltás visszajelzés</div><div class="test-desc">ERP-ben "Feldolgozás alatt" státuszra váltott rendelés értesítőt küld a vevőnek.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-014</td>
+          <td><div class="test-name">Készletcsökkentés webshop rendelésnél</div><div class="test-desc">Online rendelés után a webshop-készlet automatikusan csökken az ERP-ben.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-015</td>
+          <td><div class="test-name">Szállítólevél / csomag generálás</div><div class="test-desc">Rendelésből szállítólevél nyomtatható, tartalmazza a helyes tételeket és szállítási adatokat.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST-016</td>
+          <td><div class="test-Számla/ eladási számla generálás</div><div class="test-desc">Rendelésből számla nyomtatható, tartalmazza a helyes tételeket és árakat, a megfelelő fordításokkal.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-017</td>
+          <td><div class="test-name">Visszáruzás indítása</div><div class="test-desc">Webshop visszáru-rendelés megjelenik az ERP-ben, és a paraméterben megadott tárhelyre könyvelődik a folyamat által. A jóváírások a megfelelő összeggel könyvelődnek.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge store">Offline bolt</span>
+      <span class="section-title">Pénztár (POS) folyamat</span>
+      <span class="section-count">5 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr><th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-018</td>
+          <td><div class="test-name">POS eladás rögzítése</div><div class="test-desc">Bolti vásárlás lezárható, bizonylat nyomtatható, és a tranzakció megjelenik ERP-ben.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-019</td>
+          <td><div class="test-name">Készletcsökkentés POS eladásnál</div><div class="test-desc">Fizikai eladás után a bolti raktárkészlet automatikusan csökken az ERP-ben.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-020</td>
+          <td><div class="test-name">Napi kasszazárás</div><div class="test-desc">Nap végi kasszazárás elvégezhető, az összesítés egyezik az ERP-ben rögzített bevétellel.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-021</td>
+          <td><div class="test-name">Bolti áruvisszavét/jóváírás</div><div class="test-desc">Bizonylat alapján visszáru feldolgozható, a készlet és a pénzügyi egyenleg helyesen módosul.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge integration">Integráció</span>
+      <span class="section-title">BC-egyéb rendszerek közötti szinkron</span>
+      <span class="section-count">4 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr><th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-023</td>
+          <td><div class="test-name">Valós idejű készletszinkron - ADMIN</div><div class="test-desc">Ha a bolt elad 1 db-ot, a webshop készlete is csökken 1-gyel 2 percen belül.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-024</td>
+          <td><div class="test-name">B2B árak valós idejű lekérése - ADMIN</div><div class="test-desc">Online regisztrált vevő árai megfelelő összeggel jelennek meg a weboldalon.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST-025</td>
+          <td><div class="test-name">Rendelésmódosítások szinkronja - ADMIN</div><div class="test-desc">Az adminból beküldött módosítások megfelelően szinkronizálódnak.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST-026</td>
+          <td><div class="test-name">Csomagazonosítók szinkronja - ADMIN</div><div class="test-desc">A BC által beküldött csomagazonosítók megfelelően szinkronizálódnak az adminnal.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST-027</td>
+          <td><div class="test-name">Termékmódosítások szinkronja - ADMIN</div><div class="test-desc">Az adminból beküldött termékmódosítások megfelelően szinkronizálódnak.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST-028</td>
+          <td><div class="test-name">Termék árak és készlet szinkronja - KLAPKA</div><div class="test-desc">Az adminból beküldött termékmódosítások megfelelően szinkronizálódnak.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST-029</td>
+          <td><div class="test-name">Futár API</div><div class="test-desc">Futár API kommunikáció sikeres.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 6 -->
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge">Pénzügyek & riportok</span>
+      <span class="section-title">Alapszintű pénzügyi funkciók</span>
+      <span class="section-count">2 teszt</span>
+    </div>
+    <table class="test-table">
+      <thead>
+        <tr><th>ID</th><th>Teszt</th><th>Prior.</th><th>Státusz</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="test-id">ST-030</td>
+          <td><div class="test-name">Számla generálás</div><div class="test-desc">Webshop és bolti vásárlásból egyaránt generálható NAV-kompatibilis számla, ami a megfelelő számozási körbe könyvelődik.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NOTES -->
+
+  <div class="notes-area">
+    <h3>Teszt megjegyzések & hibajegyzék</h3>
+    <textarea placeholder="Ide írd a tesztelés során talált hibákat, észrevételeket, blokkoló problémákat…"></textarea>
+  </div>
+
+  <div class="footer">
+    <div class="footer-note">
+      P1 = Blokkol · P2 = Fontos · P3 = Alacsony prioritású<br>
+      Smoke teszt célja: a kritikus útvonalak alapszintű működésének ellenőrzése
+    </div>
+    <button class="print-btn" onclick="window.print()">⎙ Nyomtatás / PDF</button>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('today').textContent = new Date().toLocaleDateString('hu-HU');
+
+  function updateStats() {
+    const selects = document.querySelectorAll('.status-select');
+    let pass = 0, fail = 0, skip = 0, open = 0;
+    selects.forEach(s => {
+      if (s.value === 'pass') pass++;
+      else if (s.value === 'fail') fail++;
+      else if (s.value === 'skip') skip++;
+      else open++;
+    });
+    const total = selects.length;
+    document.getElementById('cnt-total').textContent = total;
+    document.getElementById('cnt-pass').textContent = pass;
+    document.getElementById('cnt-fail').textContent = fail;
+    document.getElementById('cnt-open').textContent = open;
+    const done = pass + fail + skip;
+    const pct = Math.round(done / total * 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('pct-label').textContent = pct + '%';
+
+    // color progress bar
+    const bar = document.getElementById('progress-bar');
+    if (fail > 0) bar.style.background = '#c84b2f';
+    else if (pct === 100) bar.style.background = '#2a6b4a';
+    else bar.style.background = '#2553a0';
+  }
+</script>
+
+</body>
+</html>
