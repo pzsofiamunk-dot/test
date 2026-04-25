@@ -462,7 +462,7 @@ body { background: white; }
       <tbody>
         <tr>
           <td class="test-id">ST2-001</td>
-          <td><div class="test-name">Terméklista megjelenítése</div><div class="test-desc">A termékkatalógus betölt, cikkek neve, SKU-ja és ára látható.</div></td>
+          <td><div class="test-name">Terméklista megjelenítése</div><div class="test-desc">A termékkatalógus betölt, cikkek neve, vonalkódja és ára látható.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
@@ -474,14 +474,14 @@ body { background: white; }
         </tr>
         <tr>
           <td class="test-id">ST2-003</td>
-          <td><div class="test-name">Új termék felvitele</div><div class="test-desc">Új cikk létrehozható névvel, árral, SKU-val és legalább egy vonalkóddal.</div></td>
+          <td><div class="test-name">Új termék felvitele</div><div class="test-desc">Új cikk létrehozható névvel, árral, vonalkóddal.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
           <td class="test-id">ST2-004</td>
           <td><div class="test-name">Termékkép & adatlap szinkron webshopba</div><div class="test-desc">Az ERP-ben módosított ár vagy leírás perceken belül megjelenik a webshop felületén.</div></td>
-          <td><span class="prio prio-P1">P1</span></td>
+          <td><span class="prio prio-P1">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
@@ -493,7 +493,7 @@ body { background: white; }
         <tr>
           <td class="test-id">ST2-006</td>
           <td><div class="test-name">Vonalkód olvasás raktári folyamatban</div><div class="test-desc">Szkennelt vonalkód alapján a termék azonosítható.</div></td>
-          <td><span class="prio prio-P2">P2</span></td>
+          <td><span class="prio prio-P2">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
       </tbody>
@@ -528,7 +528,7 @@ body { background: white; }
         <tr>
           <td class="test-id">ST3-004</td>
           <td><div class="test-name">Eladási rendelés és Szállítólevél generálás</div><div class="test-desc">A webshop rendelésből ERP rendelés és szállítólevél generálható, tartalmazza a helyes tételeket és szállítási adatokat.</div></td>
-          <td><span class="prio prio-P2">P2</span></td>
+          <td><span class="prio prio-P2">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
@@ -570,13 +570,13 @@ body { background: white; }
         <tr>
           <td class="test-id">ST3-011</td>
           <td><div class="test-Számla/ eladási számla generálás</div><div class="test-desc">Rendelésből számla nyomtatható, tartalmazza a helyes tételeket és árakat, a megfelelő fordításokkal.</div></td>
-          <td><span class="prio prio-P2">P2</span></td>
+          <td><span class="prio prio-P2">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
           <td class="test-id">ST3-012</td>
           <td><div class="test-name">Visszáruzás indítása</div><div class="test-desc">Webshop visszáru-rendelés megjelenik az ERP-ben, és a paraméterben megadott tárhelyre könyvelődik a folyamat által. A jóváírások a megfelelő összeggel könyvelődnek.</div></td>
-          <td><span class="prio prio-P2">P2</span></td>
+          <td><span class="prio prio-P2">P3</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
       </tbody>
@@ -588,7 +588,7 @@ body { background: white; }
   <div class="section">
     <div class="section-header">
       <span class="section-badge store">Offline bolt</span>
-      <span class="section-title">Pénztár (POS) folyamat</span>
+      <span class="section-title">Offline (POS) folyamat</span>
       <span class="section-count">5 teszt</span>
     </div>
     <table class="test-table">
@@ -598,18 +598,24 @@ body { background: white; }
       <tbody>
         <tr>
           <td class="test-id">ST4-001</td>
-          <td><div class="test-name">POS eladás rögzítése</div><div class="test-desc">Bolti vásárlás lezárható, bizonylat nyomtatható, és a tranzakció megjelenik ERP-ben.</div></td>
+          <td><div class="test-name">POS eladás rögzítése</div><div class="test-desc">Bolti vásárlás lezárható, bizonylat könyvelhető és nyomtatható (jótállási jegy).</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
           <td class="test-id">ST4-002</td>
-          <td><div class="test-name">Készletcsökkentés POS eladásnál</div><div class="test-desc">Fizikai eladás után a bolti raktárkészlet automatikusan csökken az ERP-ben.</div></td>
-          <td><span class="prio prio-P1">P1</span></td>
+          <td><div class="test-name">QR-kód beolvasás a pénztárgépen.</div><div class="test-desc">Az ERP által generált QR-kód megfelelően beolvasható, hibamentes adatokkal.</div></td>
+          <td><span class="prio prio-P1">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
         <tr>
           <td class="test-id">ST4-003</td>
+          <td><div class="test-name">Készletcsökkentés POS eladásnál</div><div class="test-desc">Fizikai eladás után a bolti raktárkészlet automatikusan csökken az ERP-ben.</div></td>
+          <td><span class="prio prio-P1">P3</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST4-004</td>
           <td><div class="test-name">Napi kasszazárás</div><div class="test-desc">Nap végi kasszazárás elvégezhető, az összesítés egyezik az ERP-ben rögzített bevétellel.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
@@ -617,6 +623,18 @@ body { background: white; }
         <tr>
           <td class="test-id">ST4-005</td>
           <td><div class="test-name">Bolti áruvisszavét/jóváírás</div><div class="test-desc">Bizonylat alapján visszáru feldolgozható, a készlet és a pénzügyi egyenleg helyesen módosul.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST4-006</td>
+          <td><div class="test-name">Bevételezési folyamat</div><div class="test-desc">Az áru elakadás nélkül bevételezhető a rendszerbe.</div></td>
+          <td><span class="prio prio-P2">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST4-007</td>
+          <td><div class="test-name">Bolti árcímke nyomtatás</div><div class="test-desc">Tömeges és eseti címkenyomtatás.</div></td>
           <td><span class="prio prio-P2">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
@@ -639,7 +657,7 @@ body { background: white; }
       <tbody>
         <tr>
           <td class="test-id">ST5-001</td>
-          <td><div class="test-name">Valós idejű készletszinkron - ADMIN</div><div class="test-desc">Ha a bolt elad 1 db-ot, a webshop készlete is csökken 1-gyel 2 percen belül.</div></td>
+          <td><div class="test-name">Valós idejű készletszinkron - ADMIN</div><div class="test-desc"></div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
@@ -651,30 +669,36 @@ body { background: white; }
         </tr>
         <tr>
           <td class="test-id">ST5-003</td>
-          <td><div class="test-name">Rendelésmódosítások szinkronja - ADMIN</div><div class="test-desc">Az adminból beküldött módosítások megfelelően szinkronizálódnak.</div></td>
+          <td><div class="test-name">Rendelésmódosítások szinkronja - ADMIN</div><div class="test-desc">A rendszerek között küldött rendelésadatok megfelelően szinkronizálódnak.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
 <tr>
           <td class="test-id">ST5-004</td>
-          <td><div class="test-name">Csomagazonosítók szinkronja - ADMIN</div><div class="test-desc">A BC által beküldött csomagazonosítók megfelelően szinkronizálódnak az adminnal.</div></td>
-          <td><span class="prio prio-P1">P1</span></td>
+          <td><div class="test-name">Csomagazonosítók szinkronja - ADMIN</div><div class="test-desc">Az ERP által beküldött csomagazonosítók megfelelően szinkronizálódnak az adminnal.</div></td>
+          <td><span class="prio prio-P1">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
 <tr>
           <td class="test-id">ST5-005</td>
-          <td><div class="test-name">Termékmódosítások szinkronja - ADMIN</div><div class="test-desc">Az adminból beküldött termékmódosítások megfelelően szinkronizálódnak.</div></td>
-          <td><span class="prio prio-P1">P1</span></td>
+          <td><div class="test-name">Termékmódosítások szinkronja - ADMIN</div><div class="test-desc">A rendszerek között küldött termékmódosítások megfelelően szinkronizálódnak.</div></td>
+          <td><span class="prio prio-P1">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
-<tr>
+        <tr>
           <td class="test-id">ST5-006</td>
-          <td><div class="test-name">Termék árak és készlet szinkronja - BOLT</div><div class="test-desc">Az adminból beküldött termékmódosítások megfelelően szinkronizálódnak.</div></td>
-          <td><span class="prio prio-P1">P1</span></td>
+          <td><div class="test-name">Termékadatok értékkészletének szinkronja - ADMIN</div><div class="test-desc">Az ERP-ből beküldött értékkészletek megfelelően szinkronizálódnak.</div></td>
+          <td><span class="prio prio-P1">P2</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
 <tr>
           <td class="test-id">ST5-007</td>
+          <td><div class="test-name">Termék árak és készlet szinkronja - BOLT</div><div class="test-desc">Az ERP-ből küldött készlet és ár adatok megfelelőek.</div></td>
+          <td><span class="prio prio-P1">P2</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+<tr>
+          <td class="test-id">ST5-008</td>
           <td><div class="test-name">Futár API</div><div class="test-desc">Futár API kommunikáció sikeres.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
@@ -699,6 +723,18 @@ body { background: white; }
         <tr>
           <td class="test-id">ST6-001</td>
           <td><div class="test-name">Számla generálás</div><div class="test-desc">Webshop és bolti vásárlásból egyaránt generálható NAV-kompatibilis számla, ami a megfelelő számozási körbe könyvelődik.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST6-001</td>
+          <td><div class="test-name">Online számla beküldés</div><div class="test-desc">A megfelelő számlák sikeresen felküldésre kerülnek az Online számla rendszerbe.</div></td>
+          <td><span class="prio prio-P1">P1</span></td>
+          <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
+        </tr>
+        <tr>
+          <td class="test-id">ST6-003</td>
+          <td><div class="test-name">Könyvelési adatok</div><div class="test-desc">A program megfelelő főkönyvi számlákra könyvel.</div></td>
           <td><span class="prio prio-P1">P1</span></td>
           <td><select class="status-select" onchange="updateStats(this)"><option value="open">— Nyitott</option><option value="pass">✓ Pass</option><option value="fail">✗ Fail</option><option value="skip">◌ Skip</option></select></td>
         </tr>
